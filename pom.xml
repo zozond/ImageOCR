@@ -21,7 +21,6 @@
         </plugins>
     </build>
 
-
     <dependencies>
         <!-- https://mvnrepository.com/artifact/net.sourceforge.tess4j/tess4j -->
         <dependency>
