@@ -8,6 +8,17 @@
     <artifactId>ImageOCR</artifactId>
     <version>0.0.1</version>
 
+    <!--    Maven local repository 설정    -->
+    <repositories>
+        <repository>
+            <id>local-repository</id>
+            <name>local-repository</name>
+            <url>http://192.168.99.100:8081/nexus/content/repositories/central/</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+    </repositories>
+
     <build>
         <plugins>
             <plugin>
@@ -22,7 +33,6 @@
     </build>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/net.sourceforge.tess4j/tess4j -->
         <dependency>
             <groupId>net.sourceforge.tess4j</groupId>
             <artifactId>tess4j</artifactId>

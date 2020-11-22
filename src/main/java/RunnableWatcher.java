@@ -1,4 +1,6 @@
-import com.sun.corba.se.impl.ior.JIDLObjectKeyTemplate;
+import org.mapdb.DB;
+import org.mapdb.DBMaker;
+import org.mapdb.Serializer;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -8,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
 
 public class RunnableWatcher implements Runnable {
 
@@ -19,7 +22,7 @@ public class RunnableWatcher implements Runnable {
     }
 
     //이미지 깨짐여부 및 파일이 이미지인지 확인
-    public static boolean isImage(String filepath){
+    private boolean isImage(String filepath){
         boolean result = false;
         File f = new File(filepath);
         try {
@@ -35,19 +38,22 @@ public class RunnableWatcher implements Runnable {
         return result;
     }
 
-    public void getAllFileNamesRecursive(String path){
-        try{
-            Files.walk(Paths.get(path)).filter(Files::isRegularFile).forEach(item -> {
-                String filepath = item.toString();
-                if(isImage(filepath)){
-                    if(!set.contains(filepath)){
-                        int lastIndex = filepath.lastIndexOf('.');
-                        Main.queue.add(new Image(item.toString(), filepath.substring(0, lastIndex) + ".txt"));
-                        set.add(filepath);
-                    }
-                }
-            });
-        }catch (IOException e){
+    public void getAllFileNamesRecursive(String path) {
+        try {
+            Files.walk(Paths.get(path))
+                    .filter(Files::isRegularFile)
+                    .forEach(item -> {
+                        String filepath = item.toString();
+
+                        if (isImage(filepath)) {
+                            if (!set.contains(filepath)) {
+                                int lastIndex = filepath.lastIndexOf('.');
+                                QueueHandler.getInstance().add(new Image(filepath, filepath.substring(0, lastIndex) + ".txt"));
+                                set.add(filepath);
+                            }
+                        }
+                    });
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -55,7 +61,6 @@ public class RunnableWatcher implements Runnable {
     public void run() {
         while (true) {
             try {
-                // watch for directory
                 getAllFileNamesRecursive(watchDir);
                 Thread.sleep(1000);
             } catch (InterruptedException e) {

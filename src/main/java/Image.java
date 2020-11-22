@@ -2,11 +2,14 @@ public class Image {
     private String filename;
     private String outPath;
 
-    Image(String filename, String outPath){
+    Image(String filename, String outPath) {
         this.filename = filename;
         this.outPath = outPath;
     }
 
+    /**
+    * setter
+    *  */
     public void setOutPath(String outPath) {
         this.outPath = outPath;
     }
@@ -15,6 +18,9 @@ public class Image {
         this.filename = filename;
     }
 
+    /**
+     * getter
+     *  */
     public String getFilename() {
         return filename;
     }

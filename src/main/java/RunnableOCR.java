@@ -12,8 +12,9 @@ public class RunnableOCR implements Runnable {
     public void run() {
         while (true) {
             try {
-                if(!Main.queue.isEmpty()){
-                    Image image = (Image) Main.queue.poll();
+                if(!QueueHandler.getInstance().isEmpty()){
+                    Image image = (Image) QueueHandler.getInstance().poll();
+
                     File imageFile = new File(image.getFilename());
                     File extractFile = new File(image.getOutPath());
                     ITesseract instance = new Tesseract();
@@ -28,7 +29,9 @@ public class RunnableOCR implements Runnable {
                         writer.append(result);
                         writer.flush();
                         writer.close();
-                        System.out.println("Done!!! : " + image.getOutPath());
+                        System.out.println("Done !!! : " + image.getOutPath());
+                    }else{
+                        System.out.println("Already Done !!! : " + image.getOutPath());
                     }
                 }
                 Thread.sleep(500);
